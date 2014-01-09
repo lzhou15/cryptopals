@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import base64
+from helpers import *
 
 thestring = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
 
@@ -8,7 +9,7 @@ def builtin():
     print base64.b64encode(thestring.decode("hex"))
 
 def fromHex(text):
-    return "".join([chr(int(text[i:i+2], 16)) for i in xrange(0, len(text), 2)])
+    return str(bytearray(toByteList(text)))
 
 def myBase64(text):
     b64index = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"

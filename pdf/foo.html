@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="API Documentation" />
+  <title>API Documentation</title>
+</head>
+<body>
+<div id="header">
+<h1 class="title">API Documentation</h1>
+<h2 class="author">API Documentation</h2>
+</div>
+<p></p>
+<p></p>
+<h1 id="module-helpers">Module helpers</h1>
+<p>[helpers]</p>
+<h2 id="functions">Functions</h2>
+<p>[helpers:toByteList]</p>
+<p><strong>toByteList</strong>(<em>text</em>)</p>
+<hr />
+<p>Take a string of hexadecimal characters and return a list of bytes, using two characters per byte.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p>xxxx</p>
+<p>A string contsisting of the characters 0-9, a-f, A-F</p>
+<p><em>(type=string)</em></p>
+</blockquote>
+<p><strong>Return Value</strong></p>
+<blockquote>
+<p>A list containing positive integers ranging from 0 to 255</p>
+<p><em>(type=list)</em></p>
+</blockquote>
+<p>[helpers:xor2Bytes]</p>
+<p><strong>xor2Bytes</strong>(<em>b1</em>, <em>b2</em>)</p>
+<hr />
+<p>XOR the two input parameters.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p>xx</p>
+<p><em>(type=int)</em></p>
+<p><em>(type=int)</em></p>
+</blockquote>
+<p><strong>Return Value</strong></p>
+<blockquote>
+<p>the result of b1 XOR b2</p>
+<p><em>(type=int)</em></p>
+</blockquote>
+<p>[helpers:xor]</p>
+<p><strong>xor</strong>(<em>data</em>, <em>key</em>)</p>
+<hr />
+<p>Multi-byte XOR, rotating over the key</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p>xxxx</p>
+<p>A list of bytes, the cleartext</p>
+<p><em>(type=list)</em></p>
+<p>A list of bytes, the key</p>
+<p><em>(type=list)</em></p>
+</blockquote>
+<p><strong>Return Value</strong></p>
+<blockquote>
+<p>A list of bytes, the ciphertext</p>
+<p><em>(type=list)</em></p>
+</blockquote>
+<p>[helpers:toHexString]</p>
+<p><strong>toHexString</strong>(<em>byteList</em>)</p>
+<hr />
+<p>Convert a list of bytes to a hexadecimal string.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p>xxxxxxxx</p>
+<p>A list of decimal bytes</p>
+<p><em>(type=list)</em></p>
+</blockquote>
+<p><strong>Return Value</strong></p>
+<blockquote>
+<p>A string contsisting of hexadecimal characters:14</p>
+<p><em>(type=string)</em></p>
+</blockquote>
+<h2 id="variables">Variables</h2>
+<p>|p|p|l</p>
+<p><strong>Name</strong> &amp; <strong>Description</strong>&amp;<br /><br /> __package__ &amp; <strong>Value:</strong> None&amp;<br /></p>
+</body>
+</html>

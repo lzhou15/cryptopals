@@ -2,7 +2,6 @@
 import sys
 from helpers import *
 
-CIPHERTEXT = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
 LANG_CODES = [
     'af', 'ar', 'az', 'bg', 'ca', 'ceb', 'cs', 'cy', 'da', 'de', 'en', 'es', 'et', 'eu', 'fa', 'fi', 'fr', 'ha', 'haw', 'hi', 'hr', 'hu', 'id', 'is', 'it', 'kk', 'ky', 'la', 'lt', 'lv', 'mk',
     'mn', 'nb', 'ne', 'nl', 'nr', 'nso', 'pl', 'ps', 'pt', 'pt_BR', 'pt_PT', 'ro', 'ru', 'sk', 'sl', 'so', 'sq', 'sr', 'ss', 'st', 'sv', 'sw', 'tl', 'tlh', 'tn', 'tr', 'ts', 'uk', 'ur', 'uz', 've', 'xh', 'zu']
@@ -15,43 +14,27 @@ def readTrigrams(language):
     return trigrams
 
 
-def evaluateResults(cleartextList, language):
+def evaluateAndPrintResults(cleartextList, language):
     trigrams = readTrigrams(language)
-    result = ""
-    count = 0
     for text in cleartextList:
-        currentCount = 0
+        count = 0
         for t in trigrams:
-            currentCount += text.lower().count(t)
-        if currentCount > count:
-            count = currentCount
-            result = text
-    return (result, count)
+            count += text.lower().count(t)
+        if count > 4:
+            print text
 
 
 def printUsage():
     print "Usage: %s [language code]" % sys.argv[0]
     print """Available languages:
-    af ar az
-    bg
-    ca ceb cs cy
-    da de
-    en es et eu
-    fa fi fr
-    ha haw hi hr hu
-    id is it
-    kk ky
-    la lt lv
-    mk mn
-    nb ne nl nr nso
-    pl ps pt pt_BR pt_PT
-    ro ru
-    sk sl so sq sr ss st sv sw
-    tl tlh tn tr ts
-    uk ur uz
-    ve
-    xh
-    zu"""
+    af ar az bg ca ceb cs cy
+    da de en es et eu fa fi
+    fr ha haw hi hr hu id is
+    it kk ky la lt lv mk mn
+    nb ne nl nr nso pl ps pt
+    pt_BR pt_PT ro ru sk sl so sq
+    sr ss st sv sw tl tlh tn
+    tr ts uk ur uz ve xh zu"""
 
 
 def main():
@@ -63,12 +46,14 @@ def main():
         printUsage()
         sys.exit(2)
 
+    ciphertexts = [x.strip() for x in open("./challenge4.txt").readlines()]
     cleartextList = []
-    for k in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
-        cleartextList.append(
-            str(bytearray(xor(toByteList(CIPHERTEXT), [ord(k)]))))
+    for k in range(127):
+        for cipher in ciphertexts:
+            cleartextList.append(
+                str(bytearray(xor(toByteList(cipher), [k]))))
 
-    print "%s (%d hits)" % evaluateResults(cleartextList, sys.argv[1])
+    evaluateAndPrintResults(cleartextList, sys.argv[1])
 
 
 if __name__ == '__main__':

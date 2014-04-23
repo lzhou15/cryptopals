@@ -1,11 +1,15 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 import sys
 from helpers import *
 
 CIPHERTEXT = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
 LANG_CODES = [
-    'af', 'ar', 'az', 'bg', 'ca', 'ceb', 'cs', 'cy', 'da', 'de', 'en', 'es', 'et', 'eu', 'fa', 'fi', 'fr', 'ha', 'haw', 'hi', 'hr', 'hu', 'id', 'is', 'it', 'kk', 'ky', 'la', 'lt', 'lv', 'mk',
-    'mn', 'nb', 'ne', 'nl', 'nr', 'nso', 'pl', 'ps', 'pt', 'pt_BR', 'pt_PT', 'ro', 'ru', 'sk', 'sl', 'so', 'sq', 'sr', 'ss', 'st', 'sv', 'sw', 'tl', 'tlh', 'tn', 'tr', 'ts', 'uk', 'ur', 'uz', 've', 'xh', 'zu']
+    'af', 'ar', 'az', 'bg', 'ca', 'ceb', 'cs', 'cy', 'da', 'de', 'en', 'es',
+    'et', 'eu', 'fa', 'fi', 'fr', 'ha', 'haw', 'hi', 'hr', 'hu', 'id', 'is',
+    'it', 'kk', 'ky', 'la', 'lt', 'lv', 'mk', 'mn', 'nb', 'ne', 'nl', 'nr',
+    'nso', 'pl', 'ps', 'pt', 'pt_BR', 'pt_PT', 'ro', 'ru', 'sk', 'sl', 'so',
+    'sq', 'sr', 'ss', 'st', 'sv', 'sw', 'tl', 'tlh', 'tn', 'tr', 'ts', 'uk',
+    'ur', 'uz', 've', 'xh', 'zu']
 
 
 def readTrigrams(language):

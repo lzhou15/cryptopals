@@ -1,9 +1,0 @@
-\begin{theindex}
-
-  \item helpers \textit{(module)}, \hyperpage{2--3}
-    \subitem helpers.toByteList \textit{(function)}, \hyperpage{2}
-    \subitem helpers.toHexString \textit{(function)}, \hyperpage{2}
-    \subitem helpers.xor \textit{(function)}, \hyperpage{2}
-    \subitem helpers.xor2Bytes \textit{(function)}, \hyperpage{2}
-
-\end{theindex}

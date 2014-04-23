@@ -1,20 +1,25 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 import base64
 from helpers import *
 
-thestring = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
+thestring = ("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f6"
+             "9736f6e6f7573206d757368726f6f6d")
+
 
 def builtin():
     print thestring.decode("hex")
     print base64.b64encode(thestring.decode("hex"))
 
+
 def fromHex(text):
     return str(bytearray(toByteList(text)))
 
+
 def myBase64(text):
-    b64index = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+    b64index = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456"
+                "789+/")
     b64result = ""
-    for t in [text[i:i+3] for i in xrange(0, len(text), 3)]:
+    for t in [text[i:i + 3] for i in xrange(0, len(text), 3)]:
         while len(t) < 3:
             t += "\x00"
         n = ((ord(t[0])) << 16) + ((ord(t[1])) << 8) + (ord(t[2]))
@@ -28,6 +33,7 @@ def myBase64(text):
         for i in xrange(append):
             b64result += "="
     return b64result
+
 
 def manually():
     print fromHex(thestring)

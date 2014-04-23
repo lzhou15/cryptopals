@@ -42,4 +42,11 @@ def toHexString(byteList):
     """
     return "".join([hex(x)[2:] if x>15 else '0'+hex(x)[2:] for x in byteList])
 
+def chunks(l, n):
+    """
+    Yield successive n-sized chunks from l.
 
+    Taken from http://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks-in-python
+    """
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]

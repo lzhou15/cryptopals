@@ -2,8 +2,9 @@
 import base64
 import pprint
 from helpers import *
-from challenge3 import *
+from challenge3_freq_an import *
 from collections import defaultdict
+
 
 def read_file(filename):
     try:
@@ -57,15 +58,17 @@ def do_letter_count(block):
     counts = defaultdict(int)
     for letter in block:
         counts[letter] += 1
-    result = sorted(counts, key = counts.get)
+    result = sorted(counts, key=counts.get)
     result.reverse()
     # now result[0:3] contains the three most frequent letters
     # it is assumed that one of them corresponds to the letter E
     # print result[0:3]
-    return [chr(ord(x) ^ ord('T')) for x in result[0:3]]
+    return [chr(ord(x) ^ ord('E')) for x in result[0:3]]
+
 
 def print_permutations(possible_key_values):
     pass
+
 
 def main():
     ciphertext = read_file("challenge6.ciphertext")
@@ -79,11 +82,10 @@ def main():
     transposed_blocks = transpose_blocks(ciphertext_blocks, keylen)
     # at this point we have keylen transposed blocks
     # every block has supposedly been xor'ed with the same value
-    # do a simple letter count, find the three most used letters
-    possible_key_values = []
-    for block in transposed_blocks:
-        possible_key_values.append(do_letter_count(block))
-    pprint.pprint(possible_key_values)
+    for b in transposed_blocks:
+        block + textToHexString(b)
+        cleartextList = []
+
 
 if __name__ == '__main__':
     main()

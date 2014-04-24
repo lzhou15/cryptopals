@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 def toByteList(text):
     """
     Take a string of hexadecimal characters and return a list of bytes, using
@@ -11,7 +12,8 @@ def toByteList(text):
     @rtype:         list
     @return:        A list containing positive integers ranging from 0 to 255
     """
-    return [int(text[i:i+2], 16) for i in xrange(0, len(text), 2)]
+    return [int(text[i:i + 2], 16) for i in xrange(0, len(text), 2)]
+
 
 def xor(data, key):
     """
@@ -30,6 +32,7 @@ def xor(data, key):
         result.append((data[i] & 0xff) ^ (key[i % len(key) & 0xff]))
     return result
 
+
 def toHexString(byteList):
     """
     Convert a list of bytes to a hexadecimal string.
@@ -38,9 +41,22 @@ def toHexString(byteList):
     @param  byteList:   A list of decimal bytes
 
     @rtype:             str
-    @return:            A string contsisting of hexadecimal characters:14
+    @return:            A string consisting of hexadecimal characters
     """
-    return "".join([hex(x)[2:] if x>15 else '0'+hex(x)[2:] for x in byteList])
+    return "".join([hex(x)[2:] if x > 15 else '0' + hex(x)[2:] for x in byteList])
+
+
+def textToHexString(text):
+    """
+    Convert any given string into its hex equivalent. The string AAAA will be converted to 41414141.
+
+    @type   text:   str
+    @param  text:   the string that should be converted
+
+    @rtype:         str
+    @return:        A string consisting of hexadecimal characters
+    """
+    return "".join([hex(ord(x))[2:] for x in text])
 
 def chunks(l, n):
     """
@@ -49,4 +65,4 @@ def chunks(l, n):
     Taken from http://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks-in-python
     """
     for i in xrange(0, len(l), n):
-        yield l[i:i+n]
+        yield l[i:i + n]

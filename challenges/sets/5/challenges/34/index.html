@@ -1,0 +1,194 @@
+<html>
+  
+<!-- Mirrored from cryptopals.com/sets/5/challenges/34/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Jun 2015 11:45:36 GMT -->
+<head>
+    <meta content='text/html; charset=utf-8' http-equiv='content-type'>
+    <meta content='Thomas Ptacek, Sean Devlin, and Alex Balducci' name='author'>
+    <title>Implement a MITM key-fixing attack on Diffie-Hellman with parameter injection</title>
+    <link href='../../../../static/bootstrap.css' media='all' rel='stylesheet' type='text/css'>
+    <link href='../../../../static/app.css' media='all' rel='stylesheet' type='text/css'>
+    <link href='http://cloud.typography.com/6817512/661724/css/fonts.css' rel='stylesheet' type='text/css'>
+    <link href='http://cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.css' rel='stylesheet' type='text/css'>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.js'></script>
+    <style>
+      body { 
+        padding-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='row'>
+        <div class='col-md-12'>
+          <h3>
+            <a href='../../../../index.html'>the matasano crypto challenges</a>
+          </h3>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-12'>
+          <ul class='breadcrumb'>
+            <li>
+              <a href='../../../../index.html'>Challenges</a>
+            </li>
+            <li>
+              <a href='../../index.html'>Set 5</a>
+            </li>
+            <li class='active'>
+              <a href='index.html'>Challenge 34</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-2'>
+          <ul class='nav nav-pills nav-stacked' id='languages'>
+  
+  
+  <li>
+    <a href='cpp.html'>C++</a>
+  </li>
+  
+  
+  
+  <li>
+    <a href='ruby.html'>Ruby</a>
+  </li>
+  
+  
+  
+  <li>
+    <a href='python.html'>Python</a>
+  </li>
+  
+  
+  
+  <li>
+    <a href='golang.html'>Golang</a>
+  </li>
+  
+  
+  
+  <li>
+    <a href='csharp.html'>C#</a>
+  </li>
+  
+  
+  
+  <li>
+    <a href='java.html'>Java</a>
+  </li>
+  
+  
+  
+  <li>
+    <a href='scala.html'>Scala</a>
+  </li>
+  
+  
+  
+  <li>
+    <a href='haskell.html'>Haskell</a>
+  </li>
+  
+  
+  
+  <li>
+    <a href='php.html'>PHP</a>
+  </li>
+  
+  
+  
+  <li>
+    <a href='c.html'>C</a>
+  </li>
+  
+  
+</ul>
+
+        </div>
+        <div class='col-md-10'>
+          <h3>Implement a MITM key-fixing attack on Diffie-Hellman with parameter injection</h3>
+          <p>
+  Use the code you just worked out to build a protocol and an
+  "echo" bot. You don't actually have to do the network part of this
+  if you don't want; just simulate that. The protocol is:
+</p>
+<dl>
+  <dt>
+    A->B
+  </dt>
+  <dd>Send "p", "g", "A"</dd>
+  <dt>
+    B->A
+  </dt>
+  <dd>Send "B"</dd>
+  <dt>
+    A->B
+  </dt>
+  <dd>Send AES-CBC(SHA1(s)[0:16], iv=random(16), msg) + iv</dd>
+  <dt>
+    B->A
+  </dt>
+  <dd>Send AES-CBC(SHA1(s)[0:16], iv=random(16), A's msg) + iv</dd>
+</dl>
+<p>
+  (In other words, derive an AES key from DH with SHA1, use it in both
+  directions, and do CBC with random IVs appended or prepended to the
+  message).
+</p>
+<p>
+  Now implement the following MITM attack:
+</p>
+<dl>
+  <dt>A->M</dt>
+  <dd>Send "p", "g", "A"</dd>
+  <dt>M->B</dt>
+  <dd>Send "p", "g", "p"</dd>
+  <dt>B->M</dt>
+  <dd>Send "B"</dd>
+  <dt>M->A</dt>
+  <dd>Send "p"</dd>
+  <dt>A->M</dt>
+  <dd>Send AES-CBC(SHA1(s)[0:16], iv=random(16), msg) + iv</dd>
+  <dt>M->B</dt>
+  <dd>Relay that to B</dd>
+  <dt>B->M</dt>
+  <dd>Send AES-CBC(SHA1(s)[0:16], iv=random(16), A's msg) + iv</dd>
+  <dt>M->A</dt>
+  <dd>Relay that to A</dd>
+</dl>
+<p>
+  M should be able to decrypt the messages. "A" and "B" in the protocol
+  --- the public keys, over the wire --- have been swapped out with "p".
+  Do the DH math on this quickly to see what that does to the
+  predictability of the key.
+</p>
+<p>
+  Decrypt the messages from M's vantage point as they go by.
+</p>
+<p>
+  Note that you don't actually have to inject bogus parameters to make
+  this attack work; you could just generate Ma, MA, Mb, and MB as valid
+  DH parameters to do a generic MITM attack. But do the parameter
+  injection attack; it's going to come up again.
+</p>
+
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-68682-6']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+<!-- Mirrored from cryptopals.com/sets/5/challenges/34/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Jun 2015 11:45:38 GMT -->
+</html>

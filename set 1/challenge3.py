@@ -3,6 +3,7 @@ import sys
 from helpers import *
 
 CIPHERTEXT = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+# CIPHERTEXT = "4554414f494e20534852444c55"
 LANG_CODES = [
     'af', 'ar', 'az', 'bg', 'ca', 'ceb', 'cs', 'cy', 'da', 'de', 'en', 'es',
     'et', 'eu', 'fa', 'fi', 'fr', 'ha', 'haw', 'hi', 'hr', 'hu', 'id', 'is',
@@ -68,10 +69,14 @@ def main():
         sys.exit(2)
 
     cleartextList = []
+    # xor the ciphertext with every possible key to get a list of all possible
+    # ciphertexts
     for k in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
         cleartextList.append(
-            str(bytearray(xor(toByteList(CIPHERTEXT), [ord(k)]))))
-
+            str(bytearray(xor(toByteList(CIPHERTEXT), [ord(k)])))
+        )
+    # run the evaluation routine against all ciphertexts and find the text
+    # that is most likely the plaintext
     print "%s (%d hits)" % evaluateResults(cleartextList, sys.argv[1])
 
 

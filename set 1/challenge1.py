@@ -2,17 +2,13 @@
 import base64
 from helpers import *
 
-thestring = ("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f6"
-             "9736f6e6f7573206d757368726f6f6d")
+thestring = ("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706"
+             "f69736f6e6f7573206d757368726f6f6d")
 
 
 def builtin():
     print thestring.decode("hex")
     print base64.b64encode(thestring.decode("hex"))
-
-
-def fromHex(text):
-    return str(bytearray(toByteList(text)))
 
 
 def myBase64(text):
@@ -36,8 +32,8 @@ def myBase64(text):
 
 
 def manually():
-    print fromHex(thestring)
-    print myBase64(fromHex(thestring))
+    print hexToText(thestring)
+    print myBase64(hexToText(thestring))
 
 builtin()
 manually()

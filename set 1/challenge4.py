@@ -3,8 +3,12 @@ import sys
 from helpers import *
 
 LANG_CODES = [
-    'af', 'ar', 'az', 'bg', 'ca', 'ceb', 'cs', 'cy', 'da', 'de', 'en', 'es', 'et', 'eu', 'fa', 'fi', 'fr', 'ha', 'haw', 'hi', 'hr', 'hu', 'id', 'is', 'it', 'kk', 'ky', 'la', 'lt', 'lv', 'mk',
-    'mn', 'nb', 'ne', 'nl', 'nr', 'nso', 'pl', 'ps', 'pt', 'pt_BR', 'pt_PT', 'ro', 'ru', 'sk', 'sl', 'so', 'sq', 'sr', 'ss', 'st', 'sv', 'sw', 'tl', 'tlh', 'tn', 'tr', 'ts', 'uk', 'ur', 'uz', 've', 'xh', 'zu']
+    'af', 'ar', 'az', 'bg', 'ca', 'ceb', 'cs', 'cy', 'da', 'de', 'en', 'es',
+    'et', 'eu', 'fa', 'fi', 'fr', 'ha', 'haw', 'hi', 'hr', 'hu', 'id', 'is',
+    'it', 'kk', 'ky', 'la', 'lt', 'lv', 'mk', 'mn', 'nb', 'ne', 'nl', 'nr',
+    'nso', 'pl', 'ps', 'pt', 'pt_BR', 'pt_PT', 'ro', 'ru', 'sk', 'sl', 'so',
+    'sq', 'sr', 'ss', 'st', 'sv', 'sw', 'tl', 'tlh', 'tn', 'tr', 'ts', 'uk',
+    'ur', 'uz', 've', 'xh', 'zu']
 
 
 def readTrigrams(language):
@@ -20,8 +24,8 @@ def evaluateAndPrintResults(cleartextList, language):
         count = 0
         for t in trigrams:
             count += text.lower().count(t)
-        if count > 4:
-            print text
+        if count > 10:
+            print "(%d) %s" % (count, text)
 
 
 def printUsage():
@@ -49,10 +53,13 @@ def main():
     ciphertexts = [x.strip() for x in open("./challenge4.txt").readlines()]
     cleartextList = []
     for k in range(127):
+        # xor every ciphertext w/ every key
         for cipher in ciphertexts:
             cleartextList.append(
-                str(bytearray(xor(toByteList(cipher), [k]))))
-
+                str(bytearray(xor(toByteList(cipher), [k])))
+            )
+    for e in cleartextList:
+        pass  # if 'hier' in e.lower(): print e
     evaluateAndPrintResults(cleartextList, sys.argv[1])
 
 

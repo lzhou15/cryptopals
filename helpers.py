@@ -12,7 +12,7 @@ def toByteList(text):
     @rtype:         list
     @return:        A list containing positive integers ranging from 0 to 255
     """
-    return [int(text[i:i + 2], 16) for i in xrange(0, len(text), 2)]
+    return [ord(c) for c in text.decode('hex')]
 
 
 def xor(data, key):
@@ -48,7 +48,9 @@ def toHexString(byteList):
 
 def textToHexString(text):
     """
-    Convert any given string into its hex equivalent. The string AAAA will be converted to 41414141.
+    Convert any given string into its hex equivalent. The string AAAA will be
+    converted to 41414141. Python actually knows encode('hex'), which will do
+    the same.
 
     @type   text:   str
     @param  text:   the string that should be converted
@@ -56,7 +58,22 @@ def textToHexString(text):
     @rtype:         str
     @return:        A string consisting of hexadecimal characters
     """
-    return "".join([hex(ord(x))[2:] for x in text])
+    return text.encode('hex')
+
+
+def textToByteList(text):
+    """
+    Convert any given string into its byte list equivalent. The string AAAA
+    will be converted to [65, 65, 65, 65].
+
+    @type   text:   str
+    @param  text:   the string that should be converted
+
+    @rtype:         list
+    @return:        A list containing positive integers ranging from 0 to 255
+    """
+    return toByteList(textToHexString(text))
+
 
 def chunks(l, n):
     """
@@ -66,3 +83,7 @@ def chunks(l, n):
     """
     for i in xrange(0, len(l), n):
         yield l[i:i + n]
+
+
+def hexToText(text):
+    return str(bytearray(toByteList(text)))

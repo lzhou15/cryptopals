@@ -1,17 +1,12 @@
 #!/usr/bin/env python2
 
-import requests
-import base64
 import helpers
 
-ciphertextURL = "https://gist.github.com/tqbf/3132928/raw"
-
-print "Fetching ciphertexts"
-r = requests.get(ciphertextURL)
-cipherlist = [base64.b64decode(x) for x in r.text.split()]
+ciphertexts = open('challenges/static/challenge-data/8.txt').readlines()
 
 print "Checking for ECB"
-for c in cipherlist:
+for c in ciphertexts:
+    c = helpers.toByteList(c.strip())
     blocks = list(helpers.chunks(c, 16))
     detected = []
     for b in blocks:
@@ -19,7 +14,8 @@ for c in cipherlist:
             detected.append(b)
     if detected:
         print "!!!ECB detected"
-        outp = c
+        outp = helpers.toHexString(c)
         for d in detected:
+            d = helpers.toHexString(d)
             outp = outp.replace(d, '\033[94m' + d + '\033[0m')
         print outp

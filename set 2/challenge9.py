@@ -1,11 +1,7 @@
 #!/usr/bin/env python2
 
 import sys
-
-
-def do_padding(text, length):
-    diff = length - len(text)
-    return text + chr(diff) * diff
+from helpers import pkcs7Padding
 
 
 def main():
@@ -23,10 +19,10 @@ def main():
 
     if len(unpadded_text) >= padded_length:
         print 'input is not smaller than length'
-        print 'Usage: %s <input> <length>' %(sys.argv[0])
+        print 'Usage: %s <input> <length>' % (sys.argv[0])
         sys.exit(3)
 
-    print do_padding(unpadded_text, padded_length)
+    print pkcs7Padding(unpadded_text, padded_length)
 
 
 if __name__ == '__main__':

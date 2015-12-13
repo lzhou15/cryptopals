@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from Crypto.Cipher import AES
 
 
 def toByteList(text):
@@ -87,3 +88,88 @@ def chunks(l, n):
 
 def hexToText(text):
     return str(bytearray(toByteList(text)))
+
+
+def bytesToText(bytes):
+    return hexToText(toHexString(bytes))
+
+
+def pkcs7Padding(data, blocklen):
+    """
+    Apply PKCS7 padding to data so that len(data) is a multiple of blocklen
+    """
+    if len(data) % blocklen != 0:
+        diff = blocklen - len(data) % blocklen
+        data.extend([diff for x in range(diff)])
+    return data
+
+
+def encryptECB(plain, key):
+    """
+    Encrypt the plaintext block (16 bytes) with key, using AES in ECB mode
+
+    @type  plain: list
+    @param plain: The plaintext
+    @type  key:   list
+    @param key:   The key to use
+
+    @rtype:   list
+    @return:  a list with the encrypted bytes (ciphertext)
+    """
+    aes = AES.new(bytesToText(key))
+    return textToByteList(aes.encrypt(bytesToText(plain)))
+
+
+def encryptCBC(plain, key, iv):
+    """
+    Encrypt a plaintext block with key, using AES in CBC mode
+
+    @type  plain: list
+    @param plain: The plaintext
+    @type  key:   list
+    @param key:   The key
+    @type  iv:    list
+    @param iv:    The IV or previous ciphertext
+
+    @rtype:       list
+    @return:      a list with the encrypted bytes (ciphertext)
+    """
+    ciphertext = []
+    for block in chunks(plain, 16):
+        block = xor(block, iv)
+        iv = encryptECB(block, key)
+        ciphertext.extend(iv)
+    return ciphertext
+
+
+def decryptECB(cipher, key):
+    """
+    Decrypt the ciphertext block (16 bytes) with key, using AES in ECB mode
+
+    @type  cipher: list
+    @param cipher: The plaintext
+    @type  key:    list
+    @param key:    The key to use
+
+    @rtype:        list
+    @return:       a list with the decrypted bytes (plaintext)
+    """
+    aes = AES.new(bytesToText(key), AES.MODE_ECB)
+    return textToByteList(aes.decrypt(bytesToText(cipher)))
+
+
+def decryptCBC(cipher, key, iv):
+    """
+    Decrypt a ciphertext block with key, using AES in CBC mode
+
+    @type  cipher: list
+    @param cipher: The plaintext
+    @type  key:    list
+    @param key:    The key
+    @type  iv:     list
+    @param iv:     The IV or previous ciphertext
+
+    @rtype:        list
+    @return:       a list with the decrypted bytes (plaintext)
+    """
+    return xor(decryptECB(cipher, key), iv)

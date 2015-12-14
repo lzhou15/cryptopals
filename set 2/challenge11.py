@@ -5,13 +5,6 @@ from helpers import *
 functions = [encryptECB, encryptCBC]
 
 
-def generateRandomData(len=16):
-    key = []
-    for i in xrange(len):
-        key.append(random.randint(0, 255))
-    return key
-
-
 def encryptionOracle(inp, encrypt):
     randomData = generateRandomData(random.randint(5, 10))
     inp = pkcs7Padding(randomData + inp + randomData, 16)

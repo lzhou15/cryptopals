@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from Crypto.Cipher import AES
-
+import random
 
 def toByteList(text):
     """
@@ -94,7 +94,7 @@ def bytesToText(bytes):
     return hexToText(toHexString(bytes))
 
 
-def pkcs7Padding(data, blocklen):
+def pkcs7Padding(data, blocklen=16):
     """
     Apply PKCS7 padding to data so that len(data) is a multiple of blocklen
     """
@@ -117,10 +117,11 @@ def encryptECB(plain, key):
     @return:  a list with the encrypted bytes (ciphertext)
     """
     aes = AES.new(bytesToText(key))
-    return textToByteList(aes.encrypt(bytesToText(plain)))
+    # print 'Blocksize of helper object: %d' % aes.block_size
+    return textToByteList(aes.encrypt(bytesToText(pkcs7Padding(plain))))
 
 
-def encryptCBC(plain, key, iv):
+def encryptCBC(plain, key, iv, blocksize):
     """
     Encrypt a plaintext block with key, using AES in CBC mode
 
@@ -135,7 +136,7 @@ def encryptCBC(plain, key, iv):
     @return:      a list with the encrypted bytes (ciphertext)
     """
     ciphertext = []
-    for block in chunks(plain, 16):
+    for block in chunks(plain, blocksize):
         block = xor(block, iv)
         iv = encryptECB(block, key)
         ciphertext.extend(iv)
@@ -173,3 +174,21 @@ def decryptCBC(cipher, key, iv):
     @return:       a list with the decrypted bytes (plaintext)
     """
     return xor(decryptECB(cipher, key), iv)
+
+
+def generateRandomData(len=16):
+    key = []
+    for i in xrange(len):
+        key.append(random.randint(0, 255))
+    return key
+
+
+def verifyECB(ciphertext, blocksize):
+    ctblocks = [b for b in chunks(ciphertext, blocksize)]
+    detected = []
+    for b in ctblocks:
+        if ctblocks.count(b) > 1:
+            detected.append(b)
+    if detected:
+        return True
+    return False

@@ -30,12 +30,19 @@ def main():
     plaintext = profile_for('A' * 10 + 'admin' + '\x0b' * 0xb)
     ciphertext = encryptECB(textToByteList(plaintext), key)
     adminBlock = ciphertext[16:32]  # this is the block that contains admin
+
+    # now request a regular account and make it an admin account
+    # the mail address correctly aligns the blocks
     plaintext = profile_for('admin1@me.com')
     print 'pre-encrypted data: ' + str(parseString(plaintext))
     ciphertext = encryptECB(textToByteList(plaintext), key)
+
+    # replace the last block user+padding with admin+padding
     ciphertext = ciphertext[:-16] + adminBlock
     plaintext = decryptECB(ciphertext, key)
-    print 'manipulated: ' + \
+
+    # the object should now contain role: admin
+    print 'manipulated data: ' + \
           str(parseString(bytesToText(removePkcs7Padding(plaintext))))
 
 

@@ -62,9 +62,17 @@ def guessBytes(maxCount, blocksize):
         # it consists of the buffer and all so far recovered bytes
         ciphertexts = generateCiphertexts(buffer[len(recoveredBytes):] +
                                           recoveredBytes)
-        ciphertext = [c for c in chunks(encrypt(buffer[len(recoveredBytes):]),
-                                        blocksize)][blockCount]
-        for plain, cipher in ciphertexts:
+        # encrypt the buffer, get the block we are currently trying to recover
+        # use chunks() to split the whole ciphertext into blocks, list compre-
+        # hension to get only the block we are interested in so we can guess
+        # the last byte of the block
+        ciphertext = [c for c in chunks(  # create list of ciphertext blocks
+            encrypt(buffer[len(recoveredBytes):]),  # create ciphertext
+            blocksize)][blockCount]  # chunksize, index into cipherblock list
+
+        # compare the block to all possible ciphertexts, recover the plaintext
+        for plain, cipher in ciphertexts:  # iterate over all ciphertexts
+            # get the block we are interested in, see above
             if [c for c in chunks(cipher, blocksize)][blockCount] \
                == ciphertext:
                 recoveredBytes.append(plain)

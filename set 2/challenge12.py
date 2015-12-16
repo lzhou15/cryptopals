@@ -3,7 +3,7 @@ from helpers import *
 from base64 import b64decode
 import sys
 
-appendix = b64decode(
+suffix = b64decode(
     ('Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkg'
      'aGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBq'
      'dXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUg'
@@ -12,7 +12,7 @@ key = generateRandomData(32)
 
 
 def encrypt(plain):
-    a = textToByteList(appendix)
+    a = textToByteList(suffix)
     plain.extend(a)
     return encryptECB(plain, key)
 
@@ -37,7 +37,7 @@ def detectBlockSize():
     while l1 == l2:
         p2 += 'A'
         l2 = len(encrypt(textToByteList(p1 + p2)))
-    # return (message length of appendix, blocksize)
+    # return (message length of suffix, blocksize)
     return (msglen - len(p1) + 1, len(p2))
 
 

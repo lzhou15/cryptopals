@@ -37,8 +37,8 @@ def detectBlockSize():
     while l1 == l2:
         p2 += 'A'
         l2 = len(encrypt(textToByteList(p1 + p2)))
-    # return (message length of suffix, blocksize)
-    return (msglen - len(p1) + 1, len(p2))
+    # return (message length of suffix, length of padding, blocksize)
+    return (msglen - len(p1) + 1, len(p1) - 1, len(p2))
 
 
 def generateCiphertexts(buffer):
@@ -80,7 +80,7 @@ def guessBytes(maxCount, blocksize):
 
 
 def main():
-    msglen, blocksize = detectBlockSize()
+    msglen, _, blocksize = detectBlockSize()  # don't need the padding length
     print 'Block size: %d, message length: %d' % (blocksize, msglen)
 
     # check for ECB use

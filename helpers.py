@@ -104,13 +104,22 @@ def pkcs7Padding(data, blocklen=16):
     return data
 
 
-def removePkcs7Padding(data):
+def checkPkcs7Padding(data):
     padding = data[-1]  # get the last item
     if data[-padding:].count(padding) == padding:   # check if the last p items
                                                     # all equal p
-        # we have valid padding, return data w/o padding
-        return data[:-padding]
-    return data  # no valid padding, return everything
+        return True
+    else:
+        raise ValueError('No valid PKCS7 padding found!')
+
+
+def removePkcs7Padding(data):
+    padding = data[-1]
+    try:
+        if checkPkcs7Padding(data):
+            return data[:-padding]
+    except ValueError, ve:
+        raise ve
 
 
 def encryptECB(plain, key):

@@ -2,7 +2,7 @@
 
 import helpers
 
-ciphertexts = open('challenges/static/challenge-data/8.txt').readlines()
+ciphertexts = open('../challenges/static/challenge-data/8.txt').readlines()
 
 print "Checking for ECB"
 for c in ciphertexts:

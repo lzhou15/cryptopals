@@ -6,7 +6,7 @@ import random
 
 prefix = generateRandomData(random.randint(2, 32))
 print 'Length of random prefix: %d' % len(prefix)
-suffix = 'Hier steht Text, der mehr oder weniger random ist.'
+suffix = c12.suffix  # 'Hier steht Text, der mehr oder weniger random ist.'
 key = generateRandomData()
 
 
@@ -48,8 +48,6 @@ def detectBlockSize():
         for i in xrange(len(ctblocks) - 1):
             if ctblocks[i] == ctblocks[i + 1]:
                 foundDouble = True
-                print 'Found double after %d bytes.' % \
-                      (len(buf) - 2 * blocksize)
                 break
         if not foundDouble:
             buf.append(0x41)
@@ -67,8 +65,15 @@ def determineBlockOffset(blocksize):
     return -1
 
 
-def guessBytes(maxCount, blocksize, blockOffset):
-    buffer = [0x41] * (blocksize - 1 + blockOffset)
+def generateCiphertexts(buffer):
+    buffers = {}
+    for b in xrange(256):
+        buffers[b] = encrypt(buffer + [b])
+    return buffers.items()
+
+
+def guessBytes(maxCount, blocksize, blockOffset, prefixFill):
+    buffer = [0x41] * (blocksize - 1 + prefixFill)
     blockCount = 0  # counts the number of recovered blocks
     recoveredBytes = []
     for i in xrange(maxCount):
@@ -79,7 +84,7 @@ def guessBytes(maxCount, blocksize, blockOffset):
 
         # ciphertexts is a list of all possible plaintext blocks
         # it consists of the buffer and all so far recovered bytes
-        ciphertexts = c12.generateCiphertexts(buffer[len(recoveredBytes):] +
+        ciphertexts = generateCiphertexts(buffer[len(recoveredBytes):] +
                                               recoveredBytes)
         # encrypt the buffer, get the block we are currently trying to recover
         # use chunks() to split the whole ciphertext into blocks, list compre-
@@ -87,12 +92,12 @@ def guessBytes(maxCount, blocksize, blockOffset):
         # the last byte of the block
         ciphertext = [c for c in chunks(  # create list of ciphertext blocks
             encrypt(buffer[len(recoveredBytes):]),  # create ciphertext
-            blocksize)][blockCount]  # chunksize, index into cipherblock list
+            blocksize)][blockCount + blockOffset]  # chunksize, index into cipherblock list
 
         # compare the block to all possible ciphertexts, recover the plaintext
         for plain, cipher in ciphertexts:  # iterate over all ciphertexts
             # get the block we are interested in, see above
-            if [c for c in chunks(cipher, blocksize)][blockCount] \
+            if [c for c in chunks(cipher, blocksize)][blockCount + blockOffset] \
                == ciphertext:
                 recoveredBytes.append(plain)
     return recoveredBytes
@@ -100,8 +105,8 @@ def guessBytes(maxCount, blocksize, blockOffset):
 
 def main():
     msglen, padlen, blocksize, prefixCount = detectBlockSize()
-    print 'Block size: %d, message length: %d, padlen: %d' % \
-          (blocksize, msglen, padlen)
+    print 'Block size: %d, message length: %d, padlen: %d, prefixCount: %d' % \
+          (blocksize, msglen, padlen, prefixCount)
 
     # check for ECB use
     ciphertext = encrypt([0x41] * 3 * blocksize)
@@ -111,7 +116,7 @@ def main():
     blockOffset = determineBlockOffset(blocksize)
     print 'Repeating block at pos. %d' % blockOffset
     # now try to recover the plaintext
-    plaintext = guessBytes(msglen, blocksize, blockOffset)
+    plaintext = guessBytes(msglen, blocksize, blockOffset, prefixCount)
     print 'Length of recovered plaintext: %d\n%s' % (len(plaintext),
                                                      bytesToText(plaintext))
 

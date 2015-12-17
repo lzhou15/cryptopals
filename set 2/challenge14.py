@@ -12,8 +12,8 @@ key = generateRandomData()
 
 def encrypt(plain):
     s = textToByteList(suffix)
-    plain.extend(s)
-    return encryptECB(prefix + plain, key)
+    p = plain + s
+    return encryptECB(prefix + p, key)
 
 
 def detectBlockSize():
@@ -43,17 +43,16 @@ def detectBlockSize():
     foundDouble = False
     buf = [0x41] * blocksize * 2
     while (not foundDouble) and len(buf) < 4 * blocksize:
-        print '>', foundDouble, len(buf)
         ciphertext = encrypt(buf)
         ctblocks = [c for c in chunks(ciphertext, blocksize)]
         for i in xrange(len(ctblocks) - 1):
             if ctblocks[i] == ctblocks[i + 1]:
                 foundDouble = True
-                print 'Found double after %d bytes.' % padcount
+                print 'Found double after %d bytes.' % \
+                      (len(buf) - 2 * blocksize)
                 break
         if not foundDouble:
             buf.append(0x41)
-        print '<', foundDouble, len(buf)
     padcount = len(buf) - 2 * blocksize  # num of bytes appended to buffer
     # return (message length of suffix, length of padding, blocksize)
     return (msglen - paddingsize, paddingsize, blocksize, padcount)

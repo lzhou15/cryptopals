@@ -2,6 +2,7 @@
 from Crypto.Cipher import AES
 import random
 
+
 def toByteList(text):
     """
     Take a string of hexadecimal characters and return a list of bytes, using
@@ -44,7 +45,8 @@ def toHexString(byteList):
     @rtype:             str
     @return:            A string consisting of hexadecimal characters
     """
-    return "".join([hex(x)[2:] if x > 15 else '0' + hex(x)[2:] for x in byteList])
+    return "".join([hex(x)[2:] if x > 15 else '0' + hex(x)[2:]
+                    for x in byteList])
 
 
 def textToHexString(text):
@@ -76,14 +78,15 @@ def textToByteList(text):
     return toByteList(textToHexString(text))
 
 
-def chunks(l, n):
+def chunks(buffer, n=16):
     """
-    Yield successive n-sized chunks from l.
+    Yield successive n-sized chunks from buffer.
 
-    Taken from http://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks-in-python
+    Taken from http://stackoverflow.com/questions/312443/
+                    how-do-you-split-a-list-into-evenly-sized-chunks-in-python
     """
-    for i in xrange(0, len(l), n):
-        yield l[i:i + n]
+    for i in xrange(0, len(buffer), n):
+        yield buffer[i:i + n]
 
 
 def hexToText(text):
@@ -100,7 +103,9 @@ def pkcs7Padding(data, blocklen=16):
     """
     if len(data) % blocklen != 0:
         diff = blocklen - len(data) % blocklen
-        data.extend([diff for x in range(diff)])
+        data.extend([diff] * diff)
+    else:
+        data.extend([blocklen] * blocklen)
     return data
 
 
@@ -115,11 +120,8 @@ def checkPkcs7Padding(data):
 
 def removePkcs7Padding(data):
     padding = data[-1]
-    try:
-        if checkPkcs7Padding(data):
-            return data[:-padding]
-    except ValueError, ve:
-        raise ve
+    if checkPkcs7Padding(data):
+        return data[:-padding]
 
 
 def encryptECB(plain, key):
@@ -136,10 +138,10 @@ def encryptECB(plain, key):
     """
     aes = AES.new(bytesToText(key))
     # print 'Blocksize of helper object: %d' % aes.block_size
-    return textToByteList(aes.encrypt(bytesToText(pkcs7Padding(plain))))
+    return textToByteList(aes.encrypt(bytesToText(plain[:])))
 
 
-def encryptCBC(plain, key, iv, blocksize):
+def encryptCBC(plain, key, iv, blocksize=16):
     """
     Encrypt a plaintext block with key, using AES in CBC mode
 
@@ -155,8 +157,8 @@ def encryptCBC(plain, key, iv, blocksize):
     """
     ciphertext = []
     for block in chunks(plain, blocksize):
-        block = xor(block, iv)
-        iv = encryptECB(block, key)
+        xored = xor(block, iv)
+        iv = encryptECB(xored, key)
         ciphertext.extend(iv)
     return ciphertext
 
@@ -177,7 +179,7 @@ def decryptECB(cipher, key):
     return textToByteList(aes.decrypt(bytesToText(cipher)))
 
 
-def decryptCBC(cipher, key, iv):
+def decryptCBC(cipher, key, iv, blocksize=16):
     """
     Decrypt a ciphertext block with key, using AES in CBC mode
 
@@ -191,7 +193,12 @@ def decryptCBC(cipher, key, iv):
     @rtype:        list
     @return:       a list with the decrypted bytes (plaintext)
     """
-    return xor(decryptECB(cipher, key), iv)
+    plaintext = []
+    for c in chunks(cipher, blocksize):
+        xored = xor(decryptECB(c, key), iv)
+        iv = c
+        plaintext.extend(xored)
+    return plaintext
 
 
 def generateRandomData(len=16):

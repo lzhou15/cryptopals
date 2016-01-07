@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from Crypto.Cipher import AES
 import random
+import struct
 
 
 def toByteList(text):
@@ -163,6 +164,37 @@ def encryptCBC(plain, key, iv, blocksize=16):
     return ciphertext
 
 
+def encryptCTR(plain, key, nonce, blocksize=16):
+    """
+    Encrypt a plaintext block with key, using AES in CTR mode
+
+    @type  plain:   list
+    @param plain:   The plaintext
+    @type  key:     list
+    @param key:     The key
+    @type  nonce:   int
+    @param nonce:   The nonce
+
+    @rtype:       list
+    @return:      a list with the encrypted bytes (ciphertext)
+    """
+    ciphertext = []
+    counter = 0
+    for block in chunks(plain):  # iterate over each block
+        # generate key material
+        keystream = encryptECB(textToByteList(
+                                    # little-endian quad-words
+                                    struct.pack('<QQ', nonce, counter)
+                               ), key)
+        counter += 1
+
+        # en-/decryption is input ^ keystream data, taking at most len(input)
+        # key bytes.
+        cipherblock = xor(block, keystream)
+        ciphertext.extend(cipherblock)
+    return ciphertext
+
+
 def decryptECB(cipher, key):
     """
     Decrypt the ciphertext block (16 bytes) with key, using AES in ECB mode
@@ -199,6 +231,24 @@ def decryptCBC(cipher, key, iv, blocksize=16):
         iv = c
         plaintext.extend(xored)
     return plaintext
+
+
+def decryptCTR(cipher, key, nonce, blocksize=16):
+    """
+    Encrypt a plaintext block with key, using AES in CTR mode
+
+    @type  cipher:  list
+    @param cipher:  The ciphertext
+    @type  key:     list
+    @param key:     The key
+    @type  nonce:   int
+    @param nonce:   The nonce
+
+    @rtype:       list
+    @return:      a list with the decrypted bytes (plaintext)
+    """
+    # en- and decryption are identical, this function is just for convenience
+    return encryptCTR(cipher, key, nonce)
 
 
 def generateRandomData(len=16):

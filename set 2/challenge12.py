@@ -14,7 +14,7 @@ key = generateRandomData(32)
 def encrypt(plain):
     a = textToByteList(suffix)
     plain.extend(a)
-    return encryptECB(plain, key)
+    return encryptECB(pkcs7Padding(plain), key)
 
 
 def detectBlockSize():

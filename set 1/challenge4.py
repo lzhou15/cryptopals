@@ -56,7 +56,7 @@ def main():
         # xor every ciphertext w/ every key
         for cipher in ciphertexts:
             cleartextList.append(
-                str(bytearray(xor(toByteList(cipher), [k])))
+                bytesToText(xor(toByteList(cipher), [k]))
             )
     for e in cleartextList:
         pass  # if 'hier' in e.lower(): print e
@@ -65,3 +65,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

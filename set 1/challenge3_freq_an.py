@@ -32,7 +32,6 @@ def evaluateResults(cleartextList, variance):
         if count > maxcount:
             maxcount = count
             result = ct
-    print maxcount
     return result
 
 
@@ -45,9 +44,11 @@ def main():
     # create all possible ciphertexts
     for k in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
         cleartextList.append(
-            str(bytearray(xor(toByteList(CIPHERTEXT), [ord(k)]))))
+            bytesToText(xor(toByteList(CIPHERTEXT), [ord(k)]))
+        )
     print evaluateResults(cleartextList, variance)
 
 
 if __name__ == '__main__':
     main()
+

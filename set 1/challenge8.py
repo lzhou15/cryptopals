@@ -1,21 +1,20 @@
 #!/usr/bin/env python2
 
-import helpers
+from helpers import *
 
 ciphertexts = open('../challenges/static/challenge-data/8.txt').readlines()
 
-print "Checking for ECB"
 for c in ciphertexts:
-    c = helpers.toByteList(c.strip())
-    blocks = list(helpers.chunks(c, 16))
+    c = toByteList(c.strip())
+    blocks = list(chunks(c, 16))
     detected = []
     for b in blocks:
         if blocks.count(b) > 1:
             detected.append(b)
     if detected:
-        print "!!!ECB detected"
-        outp = helpers.toHexString(c)
+        outp = toHexString(c)
         for d in detected:
-            d = helpers.toHexString(d)
+            d = toHexString(d)
             outp = outp.replace(d, '\033[94m' + d + '\033[0m')
         print outp
+

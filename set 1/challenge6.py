@@ -94,10 +94,11 @@ def main():
         cleartextList = []
         for k in range(127):
             cleartextList.append(
-                (str(bytearray(xor(textToByteList(block), [k]))), k)
+                (bytesToText(xor(textToByteList(block), [k])), k)
             )
         key += chr(evaluateAndPrintResults(cleartextList))
     print key
 
 if __name__ == '__main__':
     main()
+

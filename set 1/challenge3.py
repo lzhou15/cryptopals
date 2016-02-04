@@ -73,7 +73,7 @@ def main():
     # ciphertexts
     for k in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
         cleartextList.append(
-            str(bytearray(xor(toByteList(CIPHERTEXT), [ord(k)])))
+            bytesToText(xor(toByteList(CIPHERTEXT), [ord(k)]))
         )
     # run the evaluation routine against all ciphertexts and find the text
     # that is most likely the plaintext

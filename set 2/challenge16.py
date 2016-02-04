@@ -13,7 +13,6 @@ def encrypt(plain):
     prefix = textToByteList('comment1=cooking%20MCs;userdata=')
     suffix = textToByteList(';comment2=%20like%20a%20pound%20of%20bacon')
     iv = generateRandomData()
-    pprint(parseString(bytesToText(prefix + plain + suffix)))
     data = pkcs7Padding(prefix + plain + suffix)
     cipher = encryptCBC(data, key, iv, 16)
     return (iv, cipher)

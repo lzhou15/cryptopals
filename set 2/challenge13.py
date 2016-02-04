@@ -1,5 +1,4 @@
 #!/usr/bin/env python2
-from pprint import pprint
 from helpers import *
 
 accounts = {}
@@ -28,14 +27,14 @@ def main():
     key = generateRandomData()
     # 10x A to fill the first block, then admin padding for the next block
     plaintext = profile_for('A' * 10 + 'admin' + '\x0b' * 0xb)
-    ciphertext = encryptECB(textToByteList(plaintext), key)
+    ciphertext = encryptECB(pkcs7Padding(textToByteList(plaintext)), key)
     adminBlock = ciphertext[16:32]  # this is the block that contains admin
 
     # now request a regular account and make it an admin account
     # the mail address correctly aligns the blocks
     plaintext = profile_for('admin1@me.com')
     print 'pre-encrypted data: ' + str(parseString(plaintext))
-    ciphertext = encryptECB(textToByteList(plaintext), key)
+    ciphertext = encryptECB(pkcs7Padding(textToByteList(plaintext)), key)
 
     # replace the last block user+padding with admin+padding
     ciphertext = ciphertext[:-16] + adminBlock

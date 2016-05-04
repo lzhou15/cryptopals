@@ -39,7 +39,7 @@ piece of code more than once it will move into the helpers module.
 - [X] Challenge 18 completed
 - [ ] Challenge 19 not yet completed, most likely skipping it
 - [ ] Challenge 20 not yet completed, most likely skipping it
-- [X] Challenge 21 not yet completed
-- [X] Challenge 22 not yet completed
+- [X] Challenge 21 completed
+- [X] Challenge 22 completed
 - [ ] Challenge 23 not yet completed
 - [ ] Challenge 24 not yet completed

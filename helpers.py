@@ -267,3 +267,58 @@ def verifyECB(ciphertext, blocksize):
     if detected:
         return True
     return False
+
+
+class MersenneTwister():
+    def _int32(self, i):
+        return int(i & 0xffffffff)
+
+    def setup_constants(self):
+        self.n = 624
+        self.m = 397
+        self.upper_mask = 0x80000000
+        self.lower_mask = 0x7fffffff
+        self.matrix_a = 0x9908b0df
+        self.mt = [0] * self.n
+        self.mti = self.n + 1
+
+    def __init__(self, seed):
+        self.setup_constants()
+        self.mt[0] = self._int32(seed)
+        for self.mti in xrange(1, self.n):
+            self.mt[self.mti] = self._int32(
+                1812433253 *
+                (self.mt[self.mti - 1] ^ (self.mt[self.mti - 1] >> 30)) +
+                self.mti
+            )
+        self.mti += 1
+
+    def random(self):
+        mag01 = [0, self.matrix_a]
+        y = 0
+        kk = 0
+        if self.mti >= self.n:
+            while kk < self.n - self.m:
+                y = self._int32((self.mt[kk] & self.upper_mask) | \
+                                    (self.mt[kk + 1] & self.lower_mask))
+                self.mt[kk] = self._int32(self.mt[kk + self.m] ^ (y >> 1) ^ mag01[y & 1])
+                kk += 1
+            while kk < self.n - 1:
+                y = self._int32((self.mt[kk] & self.upper_mask) | \
+                    (self.mt[kk + 1] & self.lower_mask))
+                self.mt[kk] = self._int32(self.mt[kk + (self.m - self.n)] ^ (y >> 1) ^ \
+                                    mag01[y & 1])
+                kk += 1
+            y = (self.mt[self.n - 1] & self.upper_mask) | \
+                (self.mt[0] & self.lower_mask)
+            self.mt[self.n - 1] = self.mt[self.m - 1] ^ (y >> 1) ^ mag01[y & 1]
+            self.mti = 0
+
+        y = self.mt[self.mti]
+        self.mti += 1
+
+        y ^= (y >> 11)
+        y ^= (y << 7) & 0x9d2c5680
+        y ^= (y << 15) & 0xefc60000
+        y ^= (y >> 18)
+        return y

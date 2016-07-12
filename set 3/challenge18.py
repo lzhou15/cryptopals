@@ -7,10 +7,5 @@ ciphertext = b64decode(('L77na/nrFsKvynd6HzOoG7GHTLXsTVu9qvY/'
 
 
 if __name__ == '__main__':
-    print bytesToText(
-                decryptCTR(
-                            textToByteList(ciphertext),
-                            textToByteList('YELLOW SUBMARINE'),
-                            0
-                          )
-                )
+    ctr = AESCTR(textToByteList('YELLOW SUBMARINE'), 0)
+    print bytesToText(ctr.decrypt(textToByteList(ciphertext)))

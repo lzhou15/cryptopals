@@ -43,3 +43,13 @@ piece of code more than once it will move into the helpers module.
 - [X] Challenge 22 completed
 - [ ] Challenge 23 not yet completed
 - [ ] Challenge 24 not yet completed
+
+### Set 4
+- [X] Challenge 25 completed
+- [ ] Challenge 26 not yet completed
+- [ ] Challenge 27 not yet completed
+- [ ] Challenge 28 not yet completed
+- [ ] Challenge 29 not yet completed
+- [ ] Challenge 30 not yet completed
+- [ ] Challenge 31 not yet completed
+- [ ] Challenge 32 not yet completed

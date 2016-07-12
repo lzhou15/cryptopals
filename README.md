@@ -46,7 +46,7 @@ piece of code more than once it will move into the helpers module.
 
 ### Set 4
 - [X] Challenge 25 completed
-- [ ] Challenge 26 not yet completed
+- [X] Challenge 26 completed
 - [ ] Challenge 27 not yet completed
 - [ ] Challenge 28 not yet completed
 - [ ] Challenge 29 not yet completed

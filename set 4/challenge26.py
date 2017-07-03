@@ -43,6 +43,7 @@ def main():
 
     cipher[32] = cipher[32] ^ ord('_') ^ ord(';')
     cipher[38] = cipher[38] ^ ord('_') ^ ord('=')
+
     ctr.reset()
     parseString(bytesToText(ctr.decrypt(cipher)))
 
